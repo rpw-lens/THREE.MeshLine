@@ -43,13 +43,7 @@ MeshLine.prototype.setGeometry = function( g, c ) {
 			this.counters.push(c);
 			this.counters.push(c);
 		}
-	}
-
-	if( g instanceof THREE.BufferGeometry ) {
-		// read attribute positions ?
-	}
-
-	if( g instanceof Float32Array || g instanceof Array ) {
+	} else if( g instanceof Float32Array || g instanceof Array ) {
 		for( var j = 0; j < g.length; j += 3 ) {
 			var c = j/g.length;
 			this.positions.push( g[ j ], g[ j + 1 ], g[ j + 2 ] );
@@ -154,21 +148,15 @@ MeshLine.prototype.process = function() {
 			counters: new THREE.BufferAttribute( new Float32Array( this.counters ), 1 )
 		}
 	} else {
-		this.attributes.position.copyArray(new Float32Array(this.positions));
-		this.attributes.position.needsUpdate = true;
-		this.attributes.previous.copyArray(new Float32Array(this.previous));
-		this.attributes.previous.needsUpdate = true;
-		this.attributes.next.copyArray(new Float32Array(this.next));
-		this.attributes.next.needsUpdate = true;
-		this.attributes.side.copyArray(new Float32Array(this.side));
-		this.attributes.side.needsUpdate = true;
-		this.attributes.width.copyArray(new Float32Array(this.width));
-		this.attributes.width.needsUpdate = true;
-		this.attributes.uv.copyArray(new Float32Array(this.uvs));
-		this.attributes.uv.needsUpdate = true;
-		this.attributes.index.copyArray(new Uint16Array(this.indices_array));
-		this.attributes.index.needsUpdate = true;
-    }
+		this.attributes.position = new THREE.BufferAttribute( new Float32Array( this.positions ), 3 );
+		this.attributes.previous = new THREE.BufferAttribute( new Float32Array( this.previous ), 3 );
+		this.attributes.next = new THREE.BufferAttribute( new Float32Array( this.next ), 3 );
+		this.attributes.side = new THREE.BufferAttribute( new Float32Array( this.side ), 1 );
+		this.attributes.width = new THREE.BufferAttribute( new Float32Array( this.width ), 1 );
+		this.attributes.uv = new THREE.BufferAttribute( new Float32Array( this.uvs ), 2 );
+		this.attributes.index = new THREE.BufferAttribute( new Uint16Array( this.indices_array ), 1 );
+		this.attributes.counters = new THREE.BufferAttribute( new Float32Array( this.counters ), 1 );
+	}
 
 	this.geometry.addAttribute( 'position', this.attributes.position );
 	this.geometry.addAttribute( 'previous', this.attributes.previous );
